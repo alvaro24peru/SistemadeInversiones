@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+  <data>
+
+    <template id="gh_sale_order_line_view_list" name="sale.order.line.view.list" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sales_warehouses_stock/static/src/js/qty_at_date_widget.js"></script>
+        </xpath>
+    </template>
+
+  </data>
+</odoo>
