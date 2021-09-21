@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_payment_cashend_document">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div id="informations" class="row mt32 mb32">
+                        <div class="col-auto col-3 mw-100 mb-2" name="dates">
+                            <strong>Date From:</strong>
+                            <p class="m-0" t-field="o.date_from"/>
+                        </div>
+                        <div class="col-auto col-3 mw-100 mb-2" name="dates">
+                            <strong>Date To:</strong>
+                            <p class="m-0" t-field="o.date_to"/>
+                        </div>
+                        <div class="col-auto col-3 mw-100 mb-2" name="users">
+                            <strong>User:</strong>
+                            <p class="m-0" t-field="o.user_id"/>
+                        </div>
+                    </div>
+                </div>
+                <t t-set="payments" t-value="o.get_query()"/>
+                <t t-set="keys" t-value="o.get_values(payments)"/>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th name="th_date" class="text-center"><span>FECHA</span></th>
+                            <th name="th_name" class="text-center"><span>NOMBRE</span></th>
+                            <th name="th_doc" class="text-center"><span>DOCUMENTO</span></th>
+                            <th name="th_inv" class="text-center"><span>FACTURAS</span></th>
+                            <t t-foreach="o.get_journals(payments)" t-as="j">
+                                <th name="th_pay" class="text-center"><span t-esc="j.name"/></th>
+                            </t>
+                            <th name="th_total" class="text-center"><span>TOTAL</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="o.get_values(payments)" t-as="d">
+                            <t t-foreach="keys.get(d)" t-as="line">
+                                <tr>
+                                    <td><span t-esc="line.get('date')"/></td>
+                                    <td><span t-esc="line.get('partner')"/></td>
+                                    <td><span t-esc="line.get('pay_number')"/></td>
+                                    <td><span t-esc="line.get('doc_number')"/></td>
+                                    <t t-foreach="o.get_journals(payments)" t-as="j">
+                                        <td><span t-esc="line.get(j.id, 0.0)"/></td>
+                                    </t>
+                                    <td><span t-esc="line.get('total')"/></td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </template>
+
+        <template id="report_payment_cash_end">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.create_uid.partner_id.lang"/>
+                    <t t-call="account_payment_report.report_payment_cashend_document" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
